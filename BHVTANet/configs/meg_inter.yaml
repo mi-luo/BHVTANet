@@ -1,0 +1,177 @@
+data_root: ${data_root:}
+exp_setting: inter-subject
+epoch: 150
+lr: 0.001
+brain_backbone: EEGProject
+vision_backbone: RN50
+dataset: meg
+timesteps:
+- 0
+- 201
+blur_kernel_size: 51
+system_g: 3
+c_num: 271
+name: BHVTANet_${dataset}_${exp_setting}_${brain_backbone}_${vision_backbone}
+ablation:
+  preset: full
+  primary_feature: semantic
+  secondary_feature: perceptual
+  use_feature_interpolation: true
+  learnable_mix_score: true
+  fixed_mix_weight: 0.5
+  normalize_primary_feature: true
+  normalize_secondary_feature: false
+retrieval:
+  preset: original
+  objective: ce
+  xbm_enabled: false
+  xbm_size: 2048
+  xbm_min_size: 128
+  vsepp_margin: 0.2
+  logit_scale: 100.0029525756836
+  label_smoothing: 0.009
+dg:
+  protocol:
+    enabled: false
+    val_subjects: auto
+models:
+  brain:
+    target: bhvtanet.models.brain_encoders.${brain_backbone}
+    params:
+      c_num: ${c_num}
+      z_dim: ${z_dim}
+      timesteps: ${timesteps}
+data:
+  data_dir: ${data_root}/things-meg/Preprocessed_data
+  image_root: ${data_root}/things-meg/Image_set_Resize
+  feature_dir: ${data_root}/things-meg/Image_feature/${feature_subdir:}
+  selected_ch: false
+  model_type: ${vision_backbone}
+  train_batch_size: 1024
+  val_batch_size: 200
+  test_batch_size: 200
+  val_ratio: 0.05
+  use_test_as_val: true
+  train_num_workers: 4
+  eval_num_workers: 4
+  feature_batch_size: 256
+  feature_num_workers: 4
+  feature_subdir: ${feature_subdir:}
+  train_avg: true
+  test_avg: true
+  train_partial_avg_k: 1
+  train_partial_avg_repeats: 1
+  timesteps: ${timesteps}
+augmentation:
+  enabled: false
+  noise_std: 0.0
+  noise_p: 0.0
+  time_mask_width: 0
+  time_mask_num: 0
+  time_mask_p: 0.0
+  channel_mask_num: 0
+  channel_mask_p: 0.0
+  scale_std: 0.0
+  scale_p: 0.0
+  time_shift: 0
+  time_shift_p: 0.0
+train:
+  epoch: ${epoch}
+  optimizer: AdamW
+  lr: ${lr}
+  weight_decay: 0.0001
+  monitor: val_score
+  monitor_mode: max
+  early_stop_patience: 45
+  early_stop_min_delta: 0.0001
+  gradient_clip_val: 1.0
+  val_top1_weight: 0.585
+  val_top5_weight: 0.415
+  test_ckpt: best
+  mixup:
+    enabled: true
+    alpha: 0.1
+    p: 0.332
+    same_subject_only: true
+    start_epoch: 0
+    stop_ratio: 0.548
+    min_lam: 0.4
+    max_lam: 0.6
+  scheduler:
+    enabled: true
+    name: warmup_cosine
+    warmup_ratio: 0.08
+    min_lr_ratio: 0.08
+  swa:
+    enabled: true
+    lr: null
+    epoch_start: 0.7
+    annealing_epochs: 10
+save_dir: results/meg_inter
+Blur:
+  soft_k: 51
+  soft_g: 3
+  hard_k: 31
+mctf:
+  enabled: true
+  consensus_supervision_enabled: true
+  depth_structure_enabled: true
+  feature_mode: multilevel_cache
+  level_feature_paths:
+  - ${data_root}/things-meg/Image_feature/${feature_subdir:}/multilevel/RN50_multilevel_all.pt
+  auto_extract:
+    enabled: true
+    image_root: ${data_root}/things-meg/Image_set_Resize
+    levels: auto
+    glob_pattern: '**/*.*'
+    batch_size: 256
+    num_workers: 4
+    use_dataset_image_paths: false
+  allow_missing_multilevel_fallback: true
+  fallback_feature_kinds:
+  - perceptual
+  - clean
+  - semantic
+  level_names:
+  - early
+  - middle
+  - late
+  - final
+  normalize_levels:
+  - true
+  - true
+  - true
+  - true
+  main_target: consensus
+  use_consensus: true
+  consensus_weight: 0.0
+  alpha_init: middle
+  use_aux_distill: true
+  aux_weight: 0.022
+  dcc_weight: 0.0005
+  mpc_weight: 5.0e-05
+  subject_conditioning:
+    enabled: true
+    num_subjects: 4
+    start_epoch: 9
+    scale: 0.062
+  sample_depth_bias:
+    enabled: true
+    mode: logit_bias
+    hidden_dim: 32
+    scale: 0.09
+    start_epoch: 3
+    detach: true
+  schedule:
+    consensus_start_epoch: 10
+    aux_start_epoch: 4
+    regularization_start_epoch: 4
+  progressive:
+    enabled: true
+    mode: hybrid
+    warmup_epochs: 16
+    bias_scale: 0.18
+    start_levels: 1
+    release_every: 5
+    hybrid_soft_bias_scale: 0.08
+  save_alpha_history: true

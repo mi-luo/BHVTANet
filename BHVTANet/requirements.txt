@@ -1,0 +1,24 @@
+# Direct dependencies pinned to the tested environment.
+# Only direct dependencies are pinned; pip resolves platform-appropriate transitive dependencies.
+# Install the CUDA 12.4 torch/torchvision wheels first when needed; see README.md.
+torch==2.6.0
+torchvision==0.21.0
+pytorch-lightning==2.6.0
+omegaconf==2.3.0
+numpy==2.0.2
+pandas==2.3.3
+pillow==11.1.0
+opencv-python==4.13.0.92
+open-clip-torch==3.3.0
+openai-clip==1.0.1
+timm==1.0.26
+safetensors==0.7.0
+tensorboard==2.20.0
+tqdm==4.67.3
+scipy==1.13.1
+einops==0.8.1
+loguru==0.7.3
+ftfy==6.3.1
+regex==2026.1.15
+setuptools==80.9.0
+fsspec[http]==2026.9.0

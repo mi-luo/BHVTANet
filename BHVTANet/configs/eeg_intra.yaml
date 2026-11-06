@@ -1,0 +1,198 @@
+data_root: ${data_root:}
+exp_setting: intra-subject
+epoch: 80
+lr: 0.0001
+brain_backbone: EEGProject
+vision_backbone: RN50
+dataset: eeg
+timesteps:
+- 0
+- 250
+blur_kernel_size: 51
+system_g: 3
+c_num: 17
+name: BHVTANet_${dataset}_${exp_setting}_${brain_backbone}_${vision_backbone}
+ablation:
+  preset: full
+  primary_feature: semantic
+  secondary_feature: perceptual
+  use_feature_interpolation: true
+  learnable_mix_score: true
+  fixed_mix_weight: 0.5
+  normalize_primary_feature: true
+  normalize_secondary_feature: false
+retrieval:
+  preset: vsepp
+  objective: ce
+  xbm_enabled: false
+  xbm_size: 4096
+  xbm_min_size: 64
+  vsepp_margin: 0.2
+  logit_scale: 100.0029525756836
+dg:
+  protocol:
+    enabled: false
+    val_subjects: auto
+models:
+  brain:
+    target: bhvtanet.models.brain_encoders.${brain_backbone}
+    params:
+      c_num: ${c_num}
+      z_dim: ${z_dim}
+      timesteps: ${timesteps}
+      drop_proj: 0.1
+data:
+  data_dir: ${data_root}/things-eeg/Preprocessed_data_250Hz_whiten
+  image_root: ${data_root}/things-eeg/Image_set_Resize
+  feature_dir: ${data_root}/things-eeg/Image_feature/${feature_subdir:}
+  selected_ch:
+  - P7
+  - P5
+  - P3
+  - P1
+  - Pz
+  - P2
+  - P4
+  - P6
+  - P8
+  - PO7
+  - PO3
+  - POz
+  - PO4
+  - PO8
+  - O1
+  - Oz
+  - O2
+  model_type: ${vision_backbone}
+  train_batch_size: 512
+  val_batch_size: 200
+  test_batch_size: 200
+  val_ratio: 0.1
+  use_test_as_val: true
+  train_num_workers: 4
+  eval_num_workers: 4
+  feature_batch_size: 256
+  feature_num_workers: 4
+  feature_subdir: ${feature_subdir:}
+  train_avg: true
+  test_avg: true
+  timesteps: ${timesteps}
+augmentation:
+  enabled: true
+  noise_std: 0.006
+  noise_p: 0.4
+  time_mask_width: 6
+  time_mask_num: 1
+  time_mask_p: 0.2
+  channel_mask_num: 1
+  channel_mask_p: 0.08
+  scale_std: 0.03
+  scale_p: 0.2
+  time_shift: 2
+  time_shift_p: 0.12
+train:
+  epoch: ${epoch}
+  optimizer: AdamW
+  lr: ${lr}
+  weight_decay: 0.0001
+  monitor: val_score
+  monitor_mode: max
+  early_stop_patience: 24
+  early_stop_min_delta: 0.0005
+  gradient_clip_val: 1.0
+  val_top1_weight: 0.75
+  val_top5_weight: 0.25
+  scheduler:
+    enabled: true
+    name: warmup_cosine
+    warmup_ratio: 0.08
+    min_lr_ratio: 0.05
+  swa:
+    enabled: true
+    lr: null
+    epoch_start: 0.75
+    annealing_epochs: 10
+target_adapter:
+  enabled: true
+  anchor_feature_dir: ${anchor_root:}/eeg_siglip2b16
+  anchor_model_type: SigLIP2-B-16-256
+  anchor_feature_kind: clean
+  anchor_mix: 0.06
+  mix_mode: inverse_score
+  score_detach: true
+  normalize_before_mix: true
+  normalize_after_mix: true
+  projector: linear
+  dropout: 0.02
+save_dir: results/eeg_intra
+Blur:
+  soft_k: 51
+  soft_g: 3
+  hard_k: 31
+mctf:
+  enabled: true
+  consensus_supervision_enabled: true
+  depth_structure_enabled: true
+  feature_mode: multilevel_cache
+  level_feature_paths:
+  - ${data_root}/things-eeg/Image_feature/${feature_subdir:}/multilevel/RN50_multilevel_all.pt
+  auto_extract:
+    enabled: true
+    image_root: ${data_root}/things-eeg/Image_set_Resize
+    levels: auto
+    glob_pattern: '**/*.*'
+    batch_size: 256
+    num_workers: 4
+    use_dataset_image_paths: false
+  allow_missing_multilevel_fallback: true
+  fallback_feature_kinds:
+  - perceptual
+  - clean
+  - semantic
+  level_names:
+  - early
+  - middle
+  - late
+  - final
+  normalize_levels:
+  - true
+  - true
+  - true
+  - true
+  main_target: blend
+  target_mix: 0.1
+  use_consensus: true
+  consensus_weight: 0.025
+  alpha_init: middle
+  use_aux_distill: true
+  aux_weight: 0.025
+  dcc_weight: 0.002
+  mpc_weight: 0.0
+  subject_conditioning:
+    enabled: false
+    start_epoch: 4
+    scale: 0.5
+  sample_depth_bias:
+    enabled: true
+    mode: scalar_prior
+    hidden_dim: 16
+    scale: 0.15
+    start_epoch: 8
+    detach: true
+  schedule:
+    consensus_start_epoch: 24
+    aux_start_epoch: 6
+    regularization_start_epoch: 12
+  progressive:
+    enabled: true
+    mode: soft
+    warmup_epochs: 18
+    bias_scale: 0.35
+    start_levels: 1
+    release_every: 6
+    hybrid_soft_bias_scale: 0.15
+  save_alpha_history: true
+eval_calibration:
+  enabled: true
+  method: col_zmix
+  weight: 0.25
