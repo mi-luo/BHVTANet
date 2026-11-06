@@ -24,52 +24,8 @@ python -m pip install -r requirements.txt
 EEG preprocessing follows the common pipeline used by NICE, UBP, and HyFI; MEG data preparation follows UBP. Please refer to their papers and public implementations:
 
 - **NICE:** [Decoding Natural Images from EEG for Object Recognition](https://openreview.net/forum?id=dhLIno8FmH), ICLR 2024. [GitHub](https://github.com/eeyhsong/NICE-EEG).
-- **UBP:** [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](https://doi.org/10.1109/CVPR52734.2025.00215
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        ), CVPR 2025. [GitHub](https://github.com/HaitaoWuTJU/Uncertainty-aware-Blur-Prior).
-- **HyFI:** [HyFI: Hyperbolic Feature Interpolation for Brain-Vision Alignment](https://doi.org/10.1609/aaai.v40i7.37476
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        ), AAAI 2026. [GitHub](https://github.com/SangMin316/HyFI).
+- **UBP:** [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](https://doi.org/10.1109/CVPR52734.2025.00215), CVPR 2025. [GitHub](https://github.com/HaitaoWuTJU/Uncertainty-aware-Blur-Prior).
+- **HyFI:** [HyFI: Hyperbolic Feature Interpolation for Brain-Vision Alignment](https://doi.org/10.1609/aaai.v40i7.37476), AAAI 2026. [GitHub](https://github.com/SangMin316/HyFI).
 
 ## Train
 
@@ -111,9 +67,10 @@ python -s scripts/summarize_results.py --results results --seed 200
 We thank the authors of THINGS-EEG and THINGS-data for making their datasets publicly available, and the authors of NICE, UBP, and HyFI for sharing their preprocessing resources and implementations. We also acknowledge the baseline networks used in our study:
 
 - **THINGS-EEG:** Gifford et al., [A large and rich EEG dataset for modeling human visual object recognition](https://doi.org/10.1016/j.neuroimage.2022.), NeuroImage, 2022.
-- **THINGS-data / THINGS-MEG:** Hebart et al., [THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://doi.org/10.7554/eLife.82580), eLife, 2023.
-        
-        
+- **THINGS-data / THINGS-MEG:** Hebart et al., [THINGS-data, a multimodal collection of large-scale datasets for investigating object representations in human brain and behavior](https://doi.org/10.7554/eLife.82580), eLife, 2023.    
+- **NICE:** [Decoding Natural Images from EEG for Object Recognition](https://openreview.net/forum?id=dhLIno8FmH), ICLR 2024. [GitHub](https://github.com/eeyhsong/NICE-EEG).
+- **UBP:** [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](https://doi.org/10.1109/CVPR52734.2025.00215), CVPR 2025. [GitHub](https://github.com/HaitaoWuTJU/Uncertainty-aware-Blur-Prior).
+- **HyFI:** [HyFI: Hyperbolic Feature Interpolation for Brain-Vision Alignment](https://doi.org/10.1609/aaai.v40i7.37476), AAAI 2026. [GitHub](https://github.com/SangMin316/HyFI).        
         
         
 
