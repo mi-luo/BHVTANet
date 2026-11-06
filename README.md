@@ -24,44 +24,8 @@ python -m pip install -r requirements.txt
 EEG preprocessing follows the common pipeline used by NICE, UBP, and HyFI; MEG data preparation follows UBP. Please refer to their papers and public implementations:
 
 - **NICE:** [Decoding Natural Images from EEG for Object Recognition](https://openreview.net/forum?id=dhLIno8FmH), ICLR 2024. [GitHub](https://github.com/eeyhsong/NICE-EEG).
-- **UBP:** [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](https://doi.org/10.1109/CVPR52734.2025.00215
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        ), CVPR 2025. [GitHub](https://github.com/HaitaoWuTJU/Uncertainty-aware-Blur-Prior).
-- **HyFI:** [HyFI: Hyperbolic Feature Interpolation for Brain-Vision Alignment](https://doi.org/10.1609/aaai.v40i7.37476
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        ), AAAI 2026. [GitHub](https://github.com/SangMin316/HyFI).
+- **UBP:** [Bridging the Vision-Brain Gap with an Uncertainty-Aware Blur Prior](https://doi.org/10.1109/CVPR52734.2025.00215), CVPR 2025. [GitHub](https://github.com/HaitaoWuTJU/Uncertainty-aware-Blur-Prior).
+- **HyFI:** [HyFI: Hyperbolic Feature Interpolation for Brain-Vision Alignment](https://doi.org/10.1609/aaai.v40i7.37476), AAAI 2026. [GitHub](https://github.com/SangMin316/HyFI).
 
 ## Train
 
